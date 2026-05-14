@@ -1,4 +1,6 @@
+import ReportList from './components/ReportList'
 import './index.css'
+import ReportForm from './components/ReportForm' // Importamos el formulario
 
 function App() {
   return (
@@ -16,37 +18,36 @@ function App() {
         </div>
       </nav>
 
-      {/* Hero */}
-      <main className="max-w-2xl mx-auto px-6 pt-20 pb-12 text-center">
-
-        {/* Badge */}
+      {/* Hero Section */}
+      <main className="max-w-2xl mx-auto px-6 pt-16 pb-8 text-center">
         <span className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 text-xs font-semibold px-4 py-1.5 rounded-full mb-6 uppercase tracking-wide">
           <span className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" />
           Proyecto universitario · Sabana Centro
         </span>
 
-        {/* Título */}
-        <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 leading-tight mb-5">
+        <h1 className="text-4xl font-bold text-slate-900 leading-tight mb-5">
           Red colaborativa de alertas para{' '}
           <span className="text-blue-700">comerciantes</span>
         </h1>
-
-        {/* Descripción */}
-        <p className="text-slate-500 text-lg leading-relaxed mb-10 max-w-xl mx-auto">
-          Ayudamos a los comerciantes de Sabana Centro a reportar y recibir
-          alertas de hurtos en tiempo real, fortaleciendo la seguridad de
-          toda la comunidad.
-        </p>
-
-        {/* Botón */}
-        <button
-          disabled
-          className="bg-blue-700 text-white font-semibold px-8 py-3.5 rounded-xl text-base opacity-90 cursor-default"
-        >
-          Próximamente
-        </button>
       </main>
 
+      {/* SECCIÓN DEL FORMULARIO (Paso 7) */}
+      <section className="max-w-xl mx-auto px-6 mb-16">
+        <div className="bg-white border border-blue-200 rounded-3xl p-8 shadow-sm">
+          <h2 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+            🚨 Crear nuevo reporte
+          </h2>
+          {/* Aquí insertamos el componente */}
+          <ReportForm /> 
+        </div>
+      </section>
+      {/* SECCIÓN DE REPORTES (Paso 8) */}
+        <section className="max-w-xl mx-auto px-6 mb-16">
+        <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+        📋 Reportes recientes
+        </h2>
+        <ReportList />
+        </section>
       {/* Cards de features */}
       <section className="max-w-2xl mx-auto px-6 pb-16 grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
@@ -64,7 +65,7 @@ function App() {
 
       {/* Footer */}
       <footer className="text-center text-xs text-slate-400 pb-6">
-        SafeZone · Proyecto universitario 2025
+        SafeZone · Proyecto universitario 2026
       </footer>
     </div>
   )

@@ -5,12 +5,14 @@ import ReportForm from './components/ReportForm'
 import ReportList from './components/ReportList'
 import Login from './components/Login'
 import Register from './components/Register'
+import Dashboard from './components/Dashboard' // <-- Agregado el import del Dashboard
 
 function App() {
   const [user, setUser]           = useState(null)
   const [username, setUsername]   = useState('')
   const [vista, setVista]         = useState('login') // 'login' | 'register'
   const [cargando, setCargando]   = useState(true)
+  const [pagina, setPagina]       = useState('home')  // <-- Agregado el estado de navegación ('home' | 'dashboard')
 
   // Revisar si ya hay sesión activa al cargar
   useEffect(() => {
@@ -32,6 +34,7 @@ function App() {
     await supabase.auth.signOut()
     setUser(null)
     setUsername('')
+    setPagina('home') // Reinicia la navegación al cerrar sesión
   }
 
   function handleLogin(user, username) {
@@ -50,10 +53,13 @@ function App() {
   return (
     <div className="min-h-screen bg-blue-50 font-sans">
 
-      {/* Navbar */}
+      {/* Navbar con botón de Dashboard */}
       <nav className="bg-white border-b border-blue-100 px-6 py-4 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => setPagina('home')}
+          >
             <div className="w-7 h-7 bg-blue-700 rounded-lg flex items-center justify-center">
               <svg className="w-4 h-4 fill-white" viewBox="0 0 24 24">
                 <path d="M12 2L4 6v6c0 5.1 3.4 9.9 8 11 4.6-1.1 8-5.9 8-11V6l-8-4z" />
@@ -61,21 +67,27 @@ function App() {
             </div>
             <span className="text-blue-700 font-bold text-xl tracking-tight">SafeZone</span>
           </div>
-
-          {/* Usuario en sesión */}
-          {user && (
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-slate-600">
-                👤 <strong>{username}</strong>
-              </span>
-              <button
-                onClick={handleLogout}
-                className="text-xs text-red-500 hover:text-red-700 font-medium border border-red-200 px-3 py-1.5 rounded-lg transition-colors"
-              >
-                Cerrar sesión
-              </button>
-            </div>
-          )}
+          <div className="flex items-center gap-3">
+            {user && (
+              <>
+                <button
+                  onClick={() => setPagina(pagina === 'dashboard' ? 'home' : 'dashboard')}
+                  className="text-xs font-medium border border-blue-200 text-blue-700 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors"
+                >
+                  {pagina === 'dashboard' ? '🏠 Inicio' : '📊 Dashboard'}
+                </button>
+                <span className="text-sm text-slate-600">
+                  👤 <strong>{username}</strong>
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="text-xs text-red-500 hover:text-red-700 font-medium border border-red-200 px-3 py-1.5 rounded-lg transition-colors"
+                >
+                  Cerrar sesión
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </nav>
 
@@ -91,9 +103,8 @@ function App() {
         </h1>
       </main>
 
-      {/* Auth o contenido principal */}
+      {/* Auth, Dashboard o contenido principal de reportes */}
       {!user ? (
-        // Pantalla de login / registro
         <section className="max-w-sm mx-auto px-6 mb-16">
           <div className="bg-white border border-blue-200 rounded-3xl p-8 shadow-sm">
             <h2 className="text-xl font-bold text-slate-800 mb-6 text-center">
@@ -105,8 +116,9 @@ function App() {
             }
           </div>
         </section>
+      ) : pagina === 'dashboard' ? (
+        <Dashboard />
       ) : (
-        // Contenido solo para usuarios registrados
         <>
           <section className="max-w-xl mx-auto px-6 mb-10">
             <div className="bg-white border border-blue-200 rounded-3xl p-8 shadow-sm">
@@ -116,7 +128,6 @@ function App() {
               <ReportForm />
             </div>
           </section>
-
           <section className="max-w-xl mx-auto px-6 mb-16">
             <h2 className="text-xl font-bold text-slate-800 mb-4">
               📋 Reportes recientes
@@ -130,8 +141,8 @@ function App() {
       <section className="max-w-2xl mx-auto px-6 pb-16 grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
           { icon: '⚡', title: 'Reportes en tiempo real', text: 'Notifica incidentes al instante a toda la red.' },
-          { icon: '🤝', title: 'Red colaborativa',        text: 'Comerciantes conectados compartiendo información.' },
-          { icon: '📍', title: 'Sabana Centro',           text: 'Diseñado para la comunidad comercial de la región.' },
+          { icon: '🤝', title: 'Red colaborativa',         text: 'Comerciantes conectados compartiendo información.' },
+          { icon: '📍', title: 'Sabana Centro',            text: 'Diseñado para la comunidad comercial de la región.' },
         ].map((card) => (
           <div key={card.title} className="bg-white border border-blue-100 rounded-2xl p-5">
             <div className="text-2xl mb-3">{card.icon}</div>
